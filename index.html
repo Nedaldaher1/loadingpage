@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ماسة فيشين | Masa Fashion</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Tajawal for a premium Arabic look similar to Apple's aesthetics -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons: FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        appleGray: '#f5f5f7',
+                        glassBorder: 'rgba(255, 255, 255, 0.4)',
+                        textDark: '#1d1d1f',
+                        textLight: '#86868b',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 3s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Apple-like Glassmorphism Utilities */
+        body {
+            background-color: #fbfbfd;
+            color: #1d1d1f;
+            overflow-x: hidden;
+        }
+
+        /* Abstract Background Blobs to show off the glass effect */
+        .blob-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #e0e7ff; animation-delay: 0s; }
+        .blob-2 { bottom: -10%; right: -10%; width: 600px; height: 600px; background: #f3e8ff; animation-delay: 2s; }
+        .blob-3 { top: 40%; left: 40%; width: 400px; height: 400px; background: #ffe4e6; animation-delay: 4s; }
+
+        /* The Glass Class */
+        .glass {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            border-color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Scroll Reveal Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hide Scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
+</head>
+<body class="antialiased font-sans">
+
+    <!-- Background Decoration -->
+    <div class="blob-bg">
+        <div class="blob blob-1 rounded-full"></div>
+        <div class="blob blob-2 rounded-full"></div>
+        <div class="blob blob-3 rounded-full"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300 glass" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="#" class="text-2xl font-bold tracking-tight text-textDark hover:opacity-80 transition">
+                        ماسة <span class="text-textLight font-light">فيشين</span>
+                    </a>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4 space-x-reverse">
+                        <a href="#home" class="text-textDark hover:text-black hover:bg-white/50 px-3 py-2 rounded-xl text-sm font-medium transition duration-300">الرئيسية</a>
+                        <a href="#products" class="text-textLight hover:text-black hover:bg-white/50 px-3 py-2 rounded-xl text-sm font-medium transition duration-300">منتجاتنا</a>
+                        <a href="#testimonials" class="text-textLight hover:text-black hover:bg-white/50 px-3 py-2 rounded-xl text-sm font-medium transition duration-300">آراء العملاء</a>
+                        <a href="#footer" class="text-textLight hover:text-black hover:bg-white/50 px-3 py-2 rounded-xl text-sm font-medium transition duration-300">تواصل معنا</a>
+                    </div>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="hidden md:block">
+                    <a href="#products" class="bg-black text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 duration-300">
+                        تسوق الآن
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button id="mobile-menu-btn" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-black focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div class="md:hidden hidden glass border-t border-white/30 absolute w-full" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
+                <a href="#home" class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium" onclick="toggleMenu()">الرئيسية</a>
+                <a href="#products" class="text-gray-600 hover:text-black block px-3 py-2 rounded-md text-base font-medium" onclick="toggleMenu()">منتجاتنا</a>
+                <a href="#testimonials" class="text-gray-600 hover:text-black block px-3 py-2 rounded-md text-base font-medium" onclick="toggleMenu()">آراء العملاء</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                
+                <!-- Text Content -->
+                <div class="text-center md:text-right z-10 space-y-6 reveal active">
+                    <span class="inline-block py-1 px-3 rounded-full bg-white/60 border border-white/50 text-xs font-semibold tracking-wider text-gray-500 uppercase backdrop-blur-sm mb-2  mt-10">
+                        تشكيلة جديدة 2025
+                    </span>
+                    <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-textDark leading-tight">
+                        الأناقة بلمسة <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-500">عباية فاخرة.</span>
+                    </h1>
+                    <p class="mt-4 max-w-lg mx-auto md:mx-0 text-xl text-textLight leading-relaxed">
+                    عبايات مخمل شتوية فاخرة أنيقة راقية مميزة
+                    دفء، راحة، وأناقة خيارك المثالي لكل يوم ولمناسباتك الخاصة.
+                    </p>
+                    <div class="mt-8 flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+                        <a href="#products" class="px-8 py-4 bg-black text-white rounded-full font-medium shadow-lg hover:shadow-gray-500/30 hover:bg-gray-900 transition-all transform hover:-translate-y-1">
+                            تصفح المجموعة
+                        </a>
+
+                    </div>
+                </div>
+
+                <!-- Hero Image -->
+                <div class="relative z-10 mt-10 md:mt-0 reveal delay-200">
+                    <div class="glass-card rounded-[2.5rem] p-4 rotate-2 hover:rotate-0 transition-transform duration-700">
+                        <div class="relative overflow-hidden rounded-[2rem] bg-gray-50/50">
+                            <!-- Placeholder for Fashion Image -->
+                            <img src="./25.jpg" 
+                                 alt="Fashion Model" 
+                                 class="object-contain w-full h-auto max-h-[600px] hover:scale-105 transition-transform duration-1000">
+                        </div>
+                    </div>
+                    <!-- Decorative Element -->
+                    <div class="absolute -bottom-5 -left-2 md:-bottom-10 md:-left-10 w-28 h-28 md:w-32 md:h-32 glass rounded-full flex items-center justify-center animate-bounce duration-[3000ms]">
+                        <div class="text-center">
+                            <span class="block text-2xl md:text-3xl font-bold text-black">20%</span>
+                            <span class="text-[10px] md:text-xs text-gray-500">خصم خاص</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-5xl font-bold text-textDark mb-4">الأكثر مبيعاً</h2>
+                <p class="text-textLight max-w-2xl mx-auto text-lg">
+                    اخترنا لك بعناية أفضل القطع التي نالت إعجاب عملائنا.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Product 1 -->
+                <div class="reveal delay-100">
+                    <div class="glass-card rounded-3xl p-4 h-full flex flex-col group cursor-pointer" onclick="openOrderModal('عباية مخمل شتوي فاخرة - موديل 1', '15.00 د.أ')">
+                        <div class="relative overflow-hidden rounded-2xl aspect-[3/4] mb-6 bg-gray-100">
+                            <img src="./5.png" 
+                                 alt="T-shirt" 
+                                 class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute top-4 right-4 bg-white/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-black shadow-sm">
+                                جديد
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-textDark mb-2">عباية مخمل شتوي فاخرة</h3>
+                        <p class="text-textLight text-sm mb-4 line-clamp-2">عباية مخمل شتوي ثقيل، ناعمة وراقية، تعطيك إحساس بالدفء مع إطلالة أنيقة تناسب الشتاء والمناسبات اليومية.</p>
+                        <div class="mt-auto flex justify-between items-center">
+                            <span class="text-lg font-bold text-black">15.00 د.أ شامل التوصيل</span>
+                            <button class="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="reveal delay-200">
+                    <div class="glass-card rounded-3xl p-4 h-full flex flex-col group cursor-pointer" onclick="openOrderModal('عباية مخمل شتوي فاخرة - موديل 2', '15.00 د.أ')">
+                        <div class="relative overflow-hidden rounded-2xl aspect-[3/4] mb-6 bg-gray-100">
+                            <img src="./25.jpg" 
+                                 alt="Hoodie" 
+                                 class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500">
+                        </div>
+                        <h3 class="text-xl font-bold text-textDark mb-2">عباية مخمل شتوي فاخرة</h3>
+                        <p class="text-textLight text-sm mb-4 line-clamp-2">مصنوعة من مخمل عالي الجودة، لا تلتصق بالجسم وتمنحك راحة تامة أثناء اللبس، مع قصّة مريحة تناسب مختلف الأذواق.</p>
+                        <div class="mt-auto flex justify-between items-center">
+                            <span class="text-lg font-bold text-black">15.00 د.أ شامل التوصيل</span>
+                            <button class="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="reveal delay-300">
+                    <div class="glass-card rounded-3xl p-4 h-full flex flex-col group cursor-pointer" onclick="openOrderModal('عباية مخمل شتوي فاخرة - موديل 3', '15.00 د.أ')">
+                        <div class="relative overflow-hidden rounded-2xl aspect-[3/4] mb-6 bg-gray-100">
+                            <img src="./26.jpg" 
+                                 alt="Jacket" 
+                                 class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500">
+                        </div>
+                        <h3 class="text-xl font-bold text-textDark mb-2">عباية مخمل شتوي فاخرة</h3>
+                        <p class="text-textLight text-sm mb-4 line-clamp-2">نوفر ضمان ما بعد البيع لراحتك، مع خدمة توصيل سريعة إلى جميع المحافظات، لتصلك العباية بكل أمان وسهولة.</p>
+                        <div class="mt-auto flex justify-between items-center">
+                            <span class="text-lg font-bold text-black">15.00 د.أ شامل التوصيل</span>
+                            <button class="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-24 relative overflow-hidden">
+        <!-- Background Decor -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[100%] bg-gradient-to-b from-transparent via-white/40 to-transparent pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-5xl font-bold text-textDark mb-4">ماذا يقول عملاؤنا؟</h2>
+                <p class="text-textLight max-w-2xl mx-auto text-lg">
+                    آراء حقيقية من عملائنا الكرام
+                </p>
+            </div>
+
+            <!-- Reviews Gallery -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 reveal">
+                <!-- Review Image 1 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openReviewModal('./reviwes/1.png')">
+                    <div class="relative aspect-square overflow-hidden">
+                        <img src="./reviwes/1.png" alt="رأي عميل" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                            <i class="fas fa-search-plus text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Image 2 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openReviewModal('./reviwes/2.png')">
+                    <div class="relative aspect-square overflow-hidden">
+                        <img src="./reviwes/2.png" alt="رأي عميل" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                            <i class="fas fa-search-plus text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Image 3 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openReviewModal('./reviwes/3.png')">
+                    <div class="relative aspect-square overflow-hidden">
+                        <img src="./reviwes/3.png" alt="رأي عميل" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                            <i class="fas fa-search-plus text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Image 4 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openReviewModal('./reviwes/4.png')">
+                    <div class="relative aspect-square overflow-hidden">
+                        <img src="./reviwes/4.png" alt="رأي عميل" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                            <i class="fas fa-search-plus text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Image 5 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openReviewModal('./reviwes/5.png')">
+                    <div class="relative aspect-square overflow-hidden">
+                        <img src="./reviwes/5.png" alt="رأي عميل" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                            <i class="fas fa-search-plus text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Image 6 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openReviewModal('./reviwes/6.png')">
+                    <div class="relative aspect-square overflow-hidden">
+                        <img src="./reviwes/6.png" alt="رأي عميل" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                            <i class="fas fa-search-plus text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Image 7 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openReviewModal('./reviwes/7.png')">
+                    <div class="relative aspect-square overflow-hidden">
+                        <img src="./reviwes/7.png" alt="رأي عميل" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                            <i class="fas fa-search-plus text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Image 8 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openReviewModal('./reviwes/8.png')">
+                    <div class="relative aspect-square overflow-hidden">
+                        <img src="./reviwes/8.png" alt="رأي عميل" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                            <i class="fas fa-search-plus text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Image 9 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openReviewModal('./reviwes/9.png')">
+                    <div class="relative aspect-square overflow-hidden">
+                        <img src="./reviwes/9.png" alt="رأي عميل" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                            <i class="fas fa-search-plus text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Image 10 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openReviewModal('./reviwes/10.png')">
+                    <div class="relative aspect-square overflow-hidden">
+                        <img src="./reviwes/10.png" alt="رأي عميل" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                            <i class="fas fa-search-plus text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Image 11 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openReviewModal('./reviwes/11.png')">
+                    <div class="relative aspect-square overflow-hidden">
+                        <img src="./reviwes/11.png" alt="رأي عميل" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                            <i class="fas fa-search-plus text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Image 12 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openReviewModal('./reviwes/12.png')">
+                    <div class="relative aspect-square overflow-hidden">
+                        <img src="./reviwes/12.png" alt="رأي عميل" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                            <i class="fas fa-search-plus text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Image 13 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openReviewModal('./reviwes/13.png')">
+                    <div class="relative aspect-square overflow-hidden">
+                        <img src="./reviwes/13.png" alt="رأي عميل" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                            <i class="fas fa-search-plus text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Image 14 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openReviewModal('./reviwes/14.png')">
+                    <div class="relative aspect-square overflow-hidden">
+                        <img src="./reviwes/14.png" alt="رأي عميل" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                            <i class="fas fa-search-plus text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="closeReviewModal(event)">
+        <div class="relative max-w-4xl max-h-[90vh] w-full">
+            <button onclick="closeReviewModal(event)" class="absolute -top-12 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:-left-12 w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/40 transition">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            <img id="modalImage" src="" alt="رأي عميل" class="w-full h-auto max-h-[85vh] object-contain rounded-2xl shadow-2xl">
+            <!-- Navigation Arrows -->
+            <button onclick="navigateReview(-1, event)" class="absolute top-1/2 -translate-y-1/2 right-2 md:-right-14 w-10 h-10 rounded-full bg-black md:bg-white/20 text-white flex items-center justify-center hover:bg-gray-800 md:hover:bg-white/40 transition">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <button onclick="navigateReview(1, event)" class="absolute top-1/2 -translate-y-1/2 left-2 md:-left-14 w-10 h-10 rounded-full bg-black md:bg-white/20 text-white flex items-center justify-center hover:bg-gray-800 md:hover:bg-white/40 transition">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Order Modal -->
+    <div id="orderModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4" onclick="closeOrderModal(event)">
+        <div class="relative w-full max-w-md glass rounded-3xl p-6 md:p-8 shadow-2xl max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <!-- Close Button -->
+            <button onclick="closeOrderModal(event)" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <!-- Modal Header -->
+            <div class="text-center mb-5">
+                <div class="w-14 h-14 md:w-16 md:h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-shopping-bag text-white text-xl md:text-2xl"></i>
+                </div>
+                <h3 class="text-xl md:text-2xl font-bold text-textDark">إتمام الطلب</h3>
+                <p id="orderProductName" class="text-textLight mt-1 text-sm md:text-base"></p>
+            </div>
+            
+            <!-- Order Form -->
+            <form id="orderForm" class="space-y-3 md:space-y-4">
+                <!-- Name Field -->
+                <div>
+                    <label class="block text-sm font-medium text-textDark mb-1.5">الاسم الكامل <span class="text-red-500">*</span></label>
+                    <input type="text" id="customerName" required placeholder="أدخل اسمك الكامل" 
+                           class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-black focus:ring-2 focus:ring-black/10 outline-none transition bg-white/80 text-base">
+                </div>
+                
+                <!-- Phone Field -->
+                <div>
+                    <label class="block text-sm font-medium text-textDark mb-1.5">رقم الهاتف <span class="text-red-500">*</span></label>
+                    <input type="tel" id="customerPhone" required placeholder="07XXXXXXXX" 
+                           class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-black focus:ring-2 focus:ring-black/10 outline-none transition bg-white/80 text-left text-base" dir="ltr">
+                </div>
+                
+                <!-- Weight & Height Row -->
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Weight Field -->
+                    <div>
+                        <label class="block text-sm font-medium text-textDark mb-1.5">الوزن (كغ)</label>
+                        <input type="text" id="customerWeight" placeholder="مثال: 65" 
+                               class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-black focus:ring-2 focus:ring-black/10 outline-none transition bg-white/80 text-base">
+                    </div>
+                    
+                    <!-- Height Field -->
+                    <div>
+                        <label class="block text-sm font-medium text-textDark mb-1.5">الطول (سم)</label>
+                        <input type="text" id="customerHeight" placeholder="مثال: 165" 
+                               class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-black focus:ring-2 focus:ring-black/10 outline-none transition bg-white/80 text-base">
+                    </div>
+                </div>
+                
+                <!-- Don't Know Checkbox -->
+                <div class="flex items-start gap-3 p-3 bg-yellow-50 rounded-xl border border-yellow-200">
+                    <input type="checkbox" id="dontKnowSize" class="w-5 h-5 mt-0.5 rounded accent-black cursor-pointer flex-shrink-0" onchange="toggleSizeFields()">
+                    <label for="dontKnowSize" class="text-sm text-yellow-800 cursor-pointer leading-relaxed">
+                        <i class="fas fa-info-circle ml-1"></i>
+                        لا أعلم وزني أو طولي (سيتواصل معك موظف مختص لمساعدتك)
+                    </label>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="w-full py-4 bg-black text-white rounded-xl font-medium hover:bg-gray-800 transition-all transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-base">
+                    <i class="fab fa-whatsapp text-xl"></i>
+                    إرسال الطلب عبر واتساب
+                </button>
+            </form>
+            
+            <!-- Footer Note -->
+            <p class="text-center text-xs text-textLight mt-3">
+                <i class="fas fa-lock ml-1"></i>
+                بياناتك آمنة ولن يتم مشاركتها مع أي طرف ثالث
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer" class="border-t border-white/40 glass relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <!-- Logo & Copyright -->
+                <div class="text-center md:text-right">
+                    <h3 class="text-2xl font-bold text-textDark mb-2">ماسة فيشين</h3>
+                    <p class="text-sm text-textLight">© 2025 جميع الحقوق محفوظة.</p>
+                </div>
+
+                <!-- Social Links -->
+                <div class="flex space-x-6 space-x-reverse">
+                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-600 hover:text-black hover:bg-white transition shadow-sm hover:scale-110 transform duration-300">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-600 hover:text-black hover:bg-white transition shadow-sm hover:scale-110 transform duration-300">
+                        <i class="fab fa-tiktok text-xl"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-600 hover:text-black hover:bg-white transition shadow-sm hover:scale-110 transform duration-300">
+                        <i class="fab fa-snapchat-ghost text-xl"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-600 hover:text-black hover:bg-white transition shadow-sm hover:scale-110 transform duration-300">
+                        <i class="fab fa-x-twitter text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        function toggleMenu() {
+            if (!menu.classList.contains('hidden')) {
+                menu.classList.add('hidden');
+            }
+        }
+
+        // Intersection Observer for Scroll Animations
+        const observerOptions = {
+            threshold: 0.15, // Trigger when 15% of element is visible
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Only animate once
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Navbar blur effect intensification on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.style.background = 'rgba(255, 255, 255, 0.85)';
+                nav.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.1)';
+            } else {
+                nav.style.background = 'rgba(255, 255, 255, 0.65)';
+                nav.style.boxShadow = 'none';
+            }
+        });
+
+        // Review Modal Functions
+        const reviewImages = [
+            './reviwes/1.png', './reviwes/2.png', './reviwes/3.png', './reviwes/4.png',
+            './reviwes/5.png', './reviwes/6.png', './reviwes/7.png', './reviwes/8.png',
+            './reviwes/9.png', './reviwes/10.png', './reviwes/11.png', './reviwes/12.png',
+            './reviwes/13.png', './reviwes/14.png'
+        ];
+        let currentReviewIndex = 0;
+
+        function openReviewModal(imageSrc) {
+            const modal = document.getElementById('reviewModal');
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = imageSrc;
+            currentReviewIndex = reviewImages.indexOf(imageSrc);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeReviewModal(event) {
+            if (event.target === event.currentTarget || event.target.closest('button')) {
+                const modal = document.getElementById('reviewModal');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        function navigateReview(direction, event) {
+            event.stopPropagation();
+            currentReviewIndex += direction;
+            if (currentReviewIndex < 0) currentReviewIndex = reviewImages.length - 1;
+            if (currentReviewIndex >= reviewImages.length) currentReviewIndex = 0;
+            document.getElementById('modalImage').src = reviewImages[currentReviewIndex];
+        }
+
+        // Keyboard navigation for modal
+        document.addEventListener('keydown', (e) => {
+            const modal = document.getElementById('reviewModal');
+            if (!modal.classList.contains('hidden')) {
+                if (e.key === 'Escape') closeReviewModal({ target: modal, currentTarget: modal });
+                if (e.key === 'ArrowLeft') navigateReview(1, { stopPropagation: () => {} });
+                if (e.key === 'ArrowRight') navigateReview(-1, { stopPropagation: () => {} });
+            }
+            // Close order modal on Escape
+            const orderModal = document.getElementById('orderModal');
+            if (!orderModal.classList.contains('hidden') && e.key === 'Escape') {
+                closeOrderModal({ target: orderModal, currentTarget: orderModal });
+            }
+        });
+
+        // Order Modal Functions
+        let currentProductName = '';
+        let currentProductPrice = '';
+
+        function openOrderModal(productName, productPrice) {
+            currentProductName = productName;
+            currentProductPrice = productPrice;
+            const modal = document.getElementById('orderModal');
+            document.getElementById('orderProductName').textContent = productName + ' - ' + productPrice;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            // Reset form
+            document.getElementById('orderForm').reset();
+            toggleSizeFields();
+        }
+
+        function closeOrderModal(event) {
+            const modal = document.getElementById('orderModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        function toggleSizeFields() {
+            const dontKnow = document.getElementById('dontKnowSize').checked;
+            const weightField = document.getElementById('customerWeight');
+            const heightField = document.getElementById('customerHeight');
+            
+            if (dontKnow) {
+                weightField.disabled = true;
+                heightField.disabled = true;
+                weightField.value = '';
+                heightField.value = '';
+                weightField.classList.add('bg-gray-100', 'cursor-not-allowed');
+                heightField.classList.add('bg-gray-100', 'cursor-not-allowed');
+            } else {
+                weightField.disabled = false;
+                heightField.disabled = false;
+                weightField.classList.remove('bg-gray-100', 'cursor-not-allowed');
+                heightField.classList.remove('bg-gray-100', 'cursor-not-allowed');
+            }
+        }
+
+        // Handle Order Form Submission
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('customerName').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+            const weight = document.getElementById('customerWeight').value.trim();
+            const height = document.getElementById('customerHeight').value.trim();
+            const dontKnowSize = document.getElementById('dontKnowSize').checked;
+            
+            let message = `مرحباً 👋\n`;
+            message += `أرغب بالطلب من المتجر\n\n`;
+            message += `📦 المنتج: ${currentProductName}\n`;
+            message += `💰 السعر: ${currentProductPrice}\n\n`;
+            message += `👤 الاسم: ${name}\n`;
+            message += `📱 الهاتف: ${phone}\n`;
+            
+            if (dontKnowSize) {
+                message += `\n⚠️ ملاحظة: لا أعلم وزني وطولي، أرجو المساعدة في اختيار المقاس المناسب`;
+            } else {
+                if (weight) message += `⚖️ الوزن: ${weight} كغ\n`;
+                if (height) message += `📏 الطول: ${height} سم\n`;
+            }
+            
+            // Encode the message for URL
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/962797514430?text=${encodedMessage}`;
+            
+            // Open WhatsApp
+            window.open(whatsappUrl, '_blank');
+            
+            // Close modal
+            closeOrderModal({});
+        });
+    </script>
+</body>
+</html>
